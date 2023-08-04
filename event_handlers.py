@@ -1,9 +1,8 @@
-import os
 from tkinter import messagebox
-import json
 import pyperclip
 
 from generator import generate_password
+from database import PasswordRecord, upsert_password
 
 
 def gen_button_click(entry):
@@ -26,30 +25,30 @@ def save_button_click(entry_dict: dict):
         user with a messagebox to confirm the information they are saving. Then, if yes, updates an existing
         saved_passwords.json else creates and writes to a new saved_passwords.json. Then, empties the entries.
         """
+
+        website = entry_dict[0].get()
+
         output_dict = {
-            entry_dict[0].get(): {
+            website: {
                 "Email": entry_dict[1].get(),
                 "Password": entry_dict[2].get(),
             }
         }
+
         submit = messagebox.askokcancel(
             title="Confirmation",
-            message=f"You entered:\n\nWebsite: {entry_dict[0].get()}"
-            f"\nEmail: {output_dict[entry_dict[0].get()]['Email']}"
-            f"\nPassword: {output_dict[entry_dict[0].get()]['Password']}",
+            message=f"You entered:\n\nWebsite: {website}"
+            f"\nEmail: {output_dict[website]['Email']}"
+            f"\nPassword: {output_dict[website]['Password']}",
         )
-        if submit:
-            if os.path.isfile("saved_passwords.json"):
-                with open("saved_passwords.json", "r") as json_file:
-                    new_file = json.load(json_file)
-                    new_file.update(output_dict)
-                with open("saved_passwords.json", "w") as json_file:
-                    json.dump(new_file, json_file, indent=4)
-            else:
-                with open("saved_passwords.json", "w") as json_file:
-                    json.dump(output_dict, json_file, indent=4)
-            for entry in [entry_dict[0], entry_dict[2]]:
-                entry.delete(0, "end")
+
+        if not submit:
+            return
+
+        upsert_password(PasswordRecord.from_json(website, output_dict[website]))
+
+        for entry in [entry_dict[0], entry_dict[2]]:
+            entry.delete(0, "end")
 
     return json_save
 
