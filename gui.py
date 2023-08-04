@@ -1,8 +1,7 @@
 from tkinter.ttk import Combobox
-from generator import *
-from constants import *
-from save_load import *
-from tkinter import *
+from constants import FONTS, LABEL_LIST, STYLES, META_BUTTONS, DEFAULT_EMAIL_LIST
+from event_handlers import gen_button_click, save_button_click, load_button_click
+from tkinter import Entry, Label, Button, Frame, Tk, SW, W, Toplevel
 
 
 class Gui:
