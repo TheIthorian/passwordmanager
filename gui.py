@@ -78,17 +78,20 @@ class Gui:
         )
         gen_button.grid(row=3, column=2)
 
-        save_button = Button(self.bottom, text="Save", font=FONTS.BUTTON)
-        save_button.grid(row=4, column=0)
-        save_button.config(command=save_button_click(self.entries))
+        def make_button(text: str, command: callable, column: int) -> Button:
+            button = Button(
+                self.bottom,
+                text=text,
+                font=FONTS.BUTTON,
+                width=STYLES.BUTTON_WIDTH,
+                command=command,
+            )
+            button.grid(row=4, column=column)
+            return button
 
-        load_button = Button(self.bottom, text="Load", font=FONTS.BUTTON)
-        load_button.grid(row=4, column=1)
-        load_button.config(command=self.create_load_window)
-
-        quit_button = Button(self.bottom, text="Quit", font=FONTS.BUTTON)
-        quit_button.grid(row=4, column=2)
-        quit_button.config(command=self.root.quit)
+        make_button("Save", save_button_click(self.entries), 1)
+        make_button("Load", self.create_load_window, 2)
+        make_button("Quit", self.root.destroy, 3)
 
     def create_load_window(self):
         """Creates the Tkinter Toplevel pop-up window and populates it with named buttons to allow the user to
