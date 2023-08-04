@@ -53,15 +53,15 @@ def save_button_click(entry_dict: dict):
     return json_save
 
 
-def load_button_click(info_to_enter: list, entry_dict: dict):
-    """Function to return inner function for purpose of assigning inner function to button command."""
+def make_handle_click_load(password_record: PasswordRecord, entries: dict):
+    def handle():
+        entries[0].delete(0, "end")
+        entries[0].insert(0, password_record.website)
 
-    def load_into_entries():
-        """Loads entry from entry_dict into entry field based on its index. To use for load buttons, construct
-        a dictionary containing button: list pairs where the button is a Tkinter Button object and the list
-        contains the information to enter in sequence."""
-        for index, entry in entry_dict.items():
-            entry.delete(0, "end")
-            entry.insert(0, info_to_enter[index])
+        entries[1].delete(0, "end")
+        entries[1].insert(0, password_record.email)
 
-    return load_into_entries
+        entries[2].delete(0, "end")
+        entries[2].insert(0, password_record.password)
+
+    return handle

@@ -1,8 +1,9 @@
 from tkinter.ttk import Combobox
 from constants import FONTS, LABEL_LIST, STYLES, META_BUTTONS, DEFAULT_EMAIL_LIST
-from event_handlers import gen_button_click, save_button_click, load_button_click
+from event_handlers import gen_button_click, save_button_click, make_handle_click_load
 from tkinter import Entry, Label, Button, Frame, Tk, SW, W, Toplevel
-import json
+
+import database
 
 
 class Gui:
@@ -15,8 +16,6 @@ class Gui:
         self.entries = None
         self.gen_button = None
         self.meta_buttons: list = []
-        self.load_button_dict: dict = {}
-        self.saved_accounts: dict = {}
 
     def create_root(self):
         """Creates Tkinter root."""
@@ -91,23 +90,18 @@ class Gui:
         self.load_window = Toplevel(self.main)
         self.load_window.title("Saved Accounts")
         self.load_window.config(padx=100, pady=30)
-        with open("saved_passwords.json") as json_file:
-            self.saved_accounts = json.load(json_file)
-            for account, details in self.saved_accounts.items():
-                input_list = [account, details["Email"], details["Password"]]
-                self.load_button_dict.update(
-                    {
-                        Button(
-                            self.load_window,
-                            text=account,
-                            width=STYLES.BUTTON_WIDTH,
-                            pady=STYLES.PAD_Y,
-                        ): input_list
-                    }
-                )
-            for button, details in self.load_button_dict.items():
-                button.config(command=load_button_click(details, self.entries))
-                button.pack()
+
+        existing_passwords = database.get_all_passwords()
+        for password_record in existing_passwords.values():
+            button = Button(
+                self.load_window,
+                text=password_record.website,
+                width=STYLES.BUTTON_WIDTH,
+                pady=STYLES.PAD_Y,
+            )
+
+            button.config(command=make_handle_click_load(password_record, self.entries))
+            button.pack()
 
     def add_meta_functions(self):
         """Creates save, load and quit functions for the meta buttons."""
