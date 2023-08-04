@@ -1,8 +1,16 @@
-email_list = ["test_email@gmail.com", "test_email@uni.ac.uk", "test_email@company.com"]
-label_list = ["Website", "Email", "Password"]
-title_font = ("Arial Bold", "16")
-label_font = ("Arial Bold", "12")
-button_font = ("Arial Bold", "10")
+class FONTS:
+    TITLE = ("Arial Bold", "16")
+    LABEL = ("Arial Bold", "12")
+    BUTTON = ("Arial Bold", "10")
+
+
+DEFAULT_EMAIL_LIST = [
+    "test_email@gmail.com",
+    "test_email@uni.ac.uk",
+    "test_email@company.com",
+]
+LABEL_LIST = ["Website", "Email", "Password"]
+
 def_gui = {
     "l_width": 10,
     "pady": 5,

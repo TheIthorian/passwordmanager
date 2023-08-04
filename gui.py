@@ -1,6 +1,6 @@
 from tkinter.ttk import Combobox
 from generator import *
-from data import *
+from constants import *
 from save_load import *
 from tkinter import *
 
@@ -34,14 +34,14 @@ class Gui:
     def create_labels(self):
         """Creates all Tkinter Label objects."""
         self.title = Label(
-            self.main, text="PASSWORD MANAGER", pady=def_gui["pady"], font=title_font
+            self.main, text="PASSWORD MANAGER", pady=def_gui["pady"], font=FONTS.TITLE
         )
         self.title.grid(columnspan=3)
-        for index, label in enumerate(label_list):
+        for index, label in enumerate(LABEL_LIST):
             Label(
                 self.main,
                 text=f"{label}: ",
-                font=label_font,
+                font=FONTS.LABEL,
                 width=def_gui["l_width"],
                 pady=def_gui["pady"],
                 anchor="e",
@@ -61,8 +61,8 @@ class Gui:
             else:
                 value.grid(row=row + 1, column=1, columnspan=2, sticky=W)
             if type(value) == Combobox:
-                value["values"] = email_list
-                value.insert(0, email_list[0])
+                value["values"] = DEFAULT_EMAIL_LIST
+                value.insert(0, DEFAULT_EMAIL_LIST[0])
 
     def add_buttons(self):
         """Creates all Tkinter Button objects. Meta buttons populate the bottom frame.
@@ -71,13 +71,15 @@ class Gui:
             self.main,
             text="Generate",
             width=def_gui["b_width"],
-            font=button_font,
+            font=FONTS.BUTTON,
             padx=def_gui["padx"],
             command=gen_button_click(self.entries[2]),
         )
         self.gen_button.grid(row=3, column=2)
         for column, button in meta_buttons.items():
-            self.meta_buttons.append(Button(self.bottom, text=button, font=button_font))
+            self.meta_buttons.append(
+                Button(self.bottom, text=button, font=FONTS.BUTTON)
+            )
             self.meta_buttons[column].grid(row=4, column=column)
 
     def create_load_window(self):
