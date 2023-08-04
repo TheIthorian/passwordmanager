@@ -34,7 +34,7 @@ class Gui:
     def create_labels(self):
         """Creates all Tkinter Label objects."""
         self.title = Label(
-            self.main, text="PASSWORD MANAGER", pady=def_gui["pady"], font=FONTS.TITLE
+            self.main, text="PASSWORD MANAGER", pady=STYLES.PAD_Y, font=FONTS.TITLE
         )
         self.title.grid(columnspan=3)
         for index, label in enumerate(LABEL_LIST):
@@ -42,18 +42,18 @@ class Gui:
                 self.main,
                 text=f"{label}: ",
                 font=FONTS.LABEL,
-                width=def_gui["l_width"],
-                pady=def_gui["pady"],
-                anchor="e",
+                width=STYLES.LABEL_WIDTH,
+                pady=STYLES.PAD_Y,
+                anchor=STYLES.LABEL_ANCHOR,
             ).grid(row=index + 1)
 
     def create_entries(self):
         """Creates all Tkinter Entry and Combobox objects. Adjusts column span for bottom entry to make room for
         generator button."""
         self.entries = {
-            0: Entry(self.main, bd=def_gui["bd"], width=def_gui["e_width_dbl"]),
-            1: Combobox(self.main, width=def_gui["c_width_dbl"]),
-            2: Entry(self.main, bd=def_gui["bd"]),
+            0: Entry(self.main, bd=STYLES.BORDER, width=STYLES.ENTRY_WIDTH),
+            1: Combobox(self.main, width=STYLES.COMBOBOX_WIDTH),
+            2: Entry(self.main, bd=STYLES.BORDER),
         }
         for row, value in self.entries.items():
             if row == 2:
@@ -70,13 +70,13 @@ class Gui:
         self.gen_button = Button(
             self.main,
             text="Generate",
-            width=def_gui["b_width"],
+            width=STYLES.BUTTON_WIDTH,
             font=FONTS.BUTTON,
-            padx=def_gui["padx"],
+            padx=STYLES.PAD_X,
             command=gen_button_click(self.entries[2]),
         )
         self.gen_button.grid(row=3, column=2)
-        for column, button in meta_buttons.items():
+        for column, button in META_BUTTONS.items():
             self.meta_buttons.append(
                 Button(self.bottom, text=button, font=FONTS.BUTTON)
             )
@@ -101,8 +101,8 @@ class Gui:
                         Button(
                             self.load_window,
                             text=account,
-                            width=def_gui["b_width"],
-                            pady=def_gui["pady"],
+                            width=STYLES.BUTTON_WIDTH,
+                            pady=STYLES.PAD_Y,
                         ): input_list
                     }
                 )

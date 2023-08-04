@@ -11,14 +11,16 @@ DEFAULT_EMAIL_LIST = [
 ]
 LABEL_LIST = ["Website", "Email", "Password"]
 
-def_gui = {
-    "l_width": 10,
-    "pady": 5,
-    "bd": 3,
-    "l_anchor": "e",
-    "b_width": 8,
-    "padx": 5,
-    "e_width_dbl": 34,
-    "c_width_dbl": 31,
-}
-meta_buttons = {0: "Save", 1: "Load", 2: "Quit"}
+
+class STYLES:
+    LABEL_WIDTH = 10
+    PAD_Y = 5
+    BORDER = 3
+    LABEL_ANCHOR = "e"
+    BUTTON_WIDTH = 8
+    PAD_X = 5
+    ENTRY_WIDTH = 34
+    COMBOBOX_WIDTH = 31
+
+
+META_BUTTONS = {0: "Save", 1: "Load", 2: "Quit"}
