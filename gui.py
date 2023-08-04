@@ -6,7 +6,6 @@ from tkinter import *
 
 
 class Gui:
-
     def __init__(self):
         self.load_window = None
         self.main = None
@@ -34,34 +33,48 @@ class Gui:
 
     def create_labels(self):
         """Creates all Tkinter Label objects."""
-        self.title = Label(self.main, text="PASSWORD MANAGER", pady=def_gui["pady"], font=title_font)
+        self.title = Label(
+            self.main, text="PASSWORD MANAGER", pady=def_gui["pady"], font=title_font
+        )
         self.title.grid(columnspan=3)
         for index, label in enumerate(label_list):
-            Label(self.main, text=f"{label}: ", font=label_font,
-                  width=def_gui["l_width"], pady=def_gui["pady"],
-                  anchor="e").grid(row=index + 1)
+            Label(
+                self.main,
+                text=f"{label}: ",
+                font=label_font,
+                width=def_gui["l_width"],
+                pady=def_gui["pady"],
+                anchor="e",
+            ).grid(row=index + 1)
 
     def create_entries(self):
         """Creates all Tkinter Entry and Combobox objects. Adjusts column span for bottom entry to make room for
         generator button."""
-        self.entries = {0: Entry(self.main, bd=def_gui["bd"], width=def_gui["e_width_dbl"]),
-                        1: Combobox(self.main, width=def_gui["c_width_dbl"]),
-                        2: Entry(self.main, bd=def_gui["bd"])}
+        self.entries = {
+            0: Entry(self.main, bd=def_gui["bd"], width=def_gui["e_width_dbl"]),
+            1: Combobox(self.main, width=def_gui["c_width_dbl"]),
+            2: Entry(self.main, bd=def_gui["bd"]),
+        }
         for row, value in self.entries.items():
             if row == 2:
                 value.grid(row=row + 1, column=1, sticky=W)
             else:
                 value.grid(row=row + 1, column=1, columnspan=2, sticky=W)
             if type(value) == Combobox:
-                value['values'] = email_list
+                value["values"] = email_list
                 value.insert(0, email_list[0])
 
     def add_buttons(self):
         """Creates all Tkinter Button objects. Meta buttons populate the bottom frame.
         Assigns generator command to gen_button Button."""
-        self.gen_button = Button(self.main, text="Generate", width=def_gui["b_width"],
-                                 font=button_font, padx=def_gui["padx"],
-                                 command=gen_button_click(self.entries[2]))
+        self.gen_button = Button(
+            self.main,
+            text="Generate",
+            width=def_gui["b_width"],
+            font=button_font,
+            padx=def_gui["padx"],
+            command=gen_button_click(self.entries[2]),
+        )
         self.gen_button.grid(row=3, column=2)
         for column, button in meta_buttons.items():
             self.meta_buttons.append(Button(self.bottom, text=button, font=button_font))
@@ -72,7 +85,8 @@ class Gui:
         load in data from saved_passwords.json. Each button is a Tkinter Button object and is the key in a
         load_button_dict dict. Each button has a value pair consisting of the website, email and password information
         from saved_passwords.json as a list. Then, calls load_button_click in a for loop on that dictionary to
-        target each button and load in the corresponding information from the key : value pairs."""
+        target each button and load in the corresponding information from the key : value pairs.
+        """
         self.load_window = Toplevel(self.main)
         self.load_window.title("Saved Accounts")
         self.load_window.config(padx=100, pady=30)
@@ -80,8 +94,16 @@ class Gui:
             self.saved_accounts = json.load(json_file)
             for account, details in self.saved_accounts.items():
                 input_list = [account, details["Email"], details["Password"]]
-                self.load_button_dict.update({Button(self.load_window, text=account,
-                                                     width=def_gui["b_width"], pady=def_gui["pady"]): input_list})
+                self.load_button_dict.update(
+                    {
+                        Button(
+                            self.load_window,
+                            text=account,
+                            width=def_gui["b_width"],
+                            pady=def_gui["pady"],
+                        ): input_list
+                    }
+                )
             for button, details in self.load_button_dict.items():
                 button.config(command=load_button_click(details, self.entries))
                 button.pack()
