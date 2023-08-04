@@ -53,7 +53,7 @@ def save_button_click(entries: Entries):
         upsert_password(PasswordRecord(website, email, password))
 
         entries.website.delete(0, "end")
-        entries.email.delete(0, "end")
+        entries.password.delete(0, "end")
 
     return json_save
 
