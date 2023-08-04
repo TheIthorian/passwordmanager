@@ -19,20 +19,29 @@ class Gui:
         self.root = None
         self.entries: Entries = None
 
-    def create_root(self):
+    def run_main_loop(self):
+        """Runs the GUI."""
+        self._create_root()
+        self._create_frames()
+        self._create_labels()
+        self._create_entries()
+        self._add_buttons()
+        self.root.mainloop()
+
+    def _create_root(self):
         """Creates Tkinter root."""
         self.root = Tk()
         self.root.title("Password Manager")
         self.root.config(padx=30, pady=20)
 
-    def create_frames(self):
+    def _create_frames(self):
         """Creates Tkinter frames for laying out GUI features. Places bottom frame at bottom row for meta buttons."""
         self.main = Frame(self.root)
         self.main.grid()
         self.bottom = Frame(self.root)
         self.bottom.grid(row=4, sticky=SW)
 
-    def create_labels(self):
+    def _create_labels(self):
         """Creates all Tkinter Label objects."""
         title = Label(
             self.main, text="PASSWORD MANAGER", pady=STYLES.PAD_Y, font=FONTS.TITLE
@@ -49,7 +58,7 @@ class Gui:
                 anchor=STYLES.LABEL_ANCHOR,
             ).grid(row=index + 1)
 
-    def create_entries(self):
+    def _create_entries(self):
         """Creates all Tkinter Entry and Combobox objects. Adjusts column span for bottom entry to make room for
         generator button."""
         website = Entry(self.main, bd=STYLES.BORDER, width=STYLES.ENTRY_WIDTH)
@@ -65,7 +74,7 @@ class Gui:
 
         self.entries = Entries(website, email, password)
 
-    def add_buttons(self):
+    def _add_buttons(self):
         """Creates all Tkinter Button objects. Meta buttons populate the bottom frame.
         Assigns generator command to gen_button Button."""
         gen_button = Button(
@@ -93,12 +102,9 @@ class Gui:
         make_button("Load", self.create_load_window, 2)
         make_button("Quit", self.root.destroy, 3)
 
-    def create_load_window(self):
+    def _create_load_window(self):
         """Creates the Tkinter Toplevel pop-up window and populates it with named buttons to allow the user to
-        load in data from saved_passwords.json. Each button is a Tkinter Button object and is the key in a
-        load_button_dict dict. Each button has a value pair consisting of the website, email and password information
-        from saved_passwords.json as a list. Then, calls load_button_click in a for loop on that dictionary to
-        target each button and load in the corresponding information from the key : value pairs.
+        load in data from database.
         """
         self.load_window = Toplevel(self.main)
         self.load_window.title("Saved Accounts")
@@ -115,12 +121,3 @@ class Gui:
 
             button.config(command=make_handle_click_load(password_record, self.entries))
             button.pack()
-
-    def run_main_loop(self):
-        """Runs the GUI."""
-        self.create_root()
-        self.create_frames()
-        self.create_labels()
-        self.create_entries()
-        self.add_buttons()
-        self.root.mainloop()
