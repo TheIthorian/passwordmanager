@@ -23,6 +23,35 @@ def generate_password():
     return password
 
 
+ALPHABET = list(map(chr, range(97, 123)))
+ALPHABET_UPPER = [letter.upper() for letter in ALPHABET]
+NUMBERS = [str(n) for n in list(range(0, 9))]
+SPECIAL = list('~`!@#$%^&*()_-+={[}]|\:;"<,>.?/')
+
+
+def generate_password_new():
+    password = ""
+    password += "".join(select_random_elements(ALPHABET, 4, 6))
+    password += "".join(select_random_elements(ALPHABET_UPPER, 2, 4))
+    password += "".join(select_random_elements(NUMBERS, 2, 4))
+    password += "".join(select_random_elements(SPECIAL, 2, 4))
+
+    password_list = list(password)
+    shuffle(password_list)
+    return "".join(password_list)
+
+
+def select_random_elements(
+    list_of_elements: list,
+    min_elements: int,
+    max_elements: int = None,
+):
+    return [
+        choice(list_of_elements)
+        for _ in range(randint(min_elements, max_elements or min_elements))
+    ]
+
+
 def gen_button_click(entry):
     """Function to return inner function for purpose of assigning inner function to button command."""
 

@@ -9,6 +9,7 @@ DEFAULT_EMAIL_LIST = [
     "test_email@uni.ac.uk",
     "test_email@company.com",
 ]
+
 LABEL_LIST = ["Website", "Email", "Password"]
 
 
