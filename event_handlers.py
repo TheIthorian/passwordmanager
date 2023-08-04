@@ -1,8 +1,18 @@
-from tkinter import messagebox
+from tkinter import messagebox, Entry
 import pyperclip
+from dataclasses import dataclass
 
 from generator import generate_password
 from database import PasswordRecord, upsert_password
+
+
+@dataclass
+class Entries:
+    """Dataclass to hold Tkinter Entry objects."""
+
+    website: Entry
+    email: Entry
+    password: Entry
 
 
 def gen_button_click(entry):
@@ -17,7 +27,7 @@ def gen_button_click(entry):
     return apply_password_to_entry
 
 
-def save_button_click(entry_dict: dict):
+def save_button_click(entries: Entries):
     """Function to return inner function for purpose of assigning inner function to button command."""
 
     def json_save():
@@ -26,12 +36,12 @@ def save_button_click(entry_dict: dict):
         saved_passwords.json else creates and writes to a new saved_passwords.json. Then, empties the entries.
         """
 
-        website = entry_dict[0].get()
+        website = entries.website.get()
 
         output_dict = {
             website: {
-                "Email": entry_dict[1].get(),
-                "Password": entry_dict[2].get(),
+                "Email": entries.email.get(),
+                "Password": entries.password.get(),
             }
         }
 
@@ -47,21 +57,21 @@ def save_button_click(entry_dict: dict):
 
         upsert_password(PasswordRecord.from_json(website, output_dict[website]))
 
-        for entry in [entry_dict[0], entry_dict[2]]:
-            entry.delete(0, "end")
+        entries.website.delete(0, "end")
+        entries.email.delete(0, "end")
 
     return json_save
 
 
-def make_handle_click_load(password_record: PasswordRecord, entries: dict):
+def make_handle_click_load(password_record: PasswordRecord, entries: Entries):
     def handle():
-        entries[0].delete(0, "end")
-        entries[0].insert(0, password_record.website)
+        entries.website.delete(0, "end")
+        entries.website.insert(0, password_record.website)
 
-        entries[1].delete(0, "end")
-        entries[1].insert(0, password_record.email)
+        entries.email.delete(0, "end")
+        entries.email.insert(0, password_record.email)
 
-        entries[2].delete(0, "end")
-        entries[2].insert(0, password_record.password)
+        entries.password.delete(0, "end")
+        entries.password.insert(0, password_record.password)
 
     return handle

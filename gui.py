@@ -1,8 +1,13 @@
-from tkinter.ttk import Combobox
-from constants import FONTS, LABEL_LIST, STYLES, META_BUTTONS, DEFAULT_EMAIL_LIST
-from event_handlers import gen_button_click, save_button_click, make_handle_click_load
 from tkinter import Entry, Label, Button, Frame, Tk, SW, W, Toplevel
+from tkinter.ttk import Combobox
 
+from constants import FONTS, LABEL_LIST, STYLES, META_BUTTONS, DEFAULT_EMAIL_LIST
+from event_handlers import (
+    gen_button_click,
+    save_button_click,
+    make_handle_click_load,
+    Entries,
+)
 import database
 
 
@@ -10,12 +15,9 @@ class Gui:
     def __init__(self):
         self.load_window = None
         self.main = None
-        self.title = None
         self.bottom = None
         self.root = None
-        self.entries = None
-        self.gen_button = None
-        self.meta_buttons: list = []
+        self.entries: Entries = None
 
     def create_root(self):
         """Creates Tkinter root."""
@@ -32,10 +34,11 @@ class Gui:
 
     def create_labels(self):
         """Creates all Tkinter Label objects."""
-        self.title = Label(
+        title = Label(
             self.main, text="PASSWORD MANAGER", pady=STYLES.PAD_Y, font=FONTS.TITLE
         )
-        self.title.grid(columnspan=3)
+        title.grid(columnspan=3)
+
         for index, label in enumerate(LABEL_LIST):
             Label(
                 self.main,
@@ -60,25 +63,32 @@ class Gui:
         password = Entry(self.main, bd=STYLES.BORDER)
         password.grid(row=3, column=1, sticky=W)
 
-        self.entries = {0: website, 1: email, 2: password}
+        self.entries = Entries(website, email, password)
 
     def add_buttons(self):
         """Creates all Tkinter Button objects. Meta buttons populate the bottom frame.
         Assigns generator command to gen_button Button."""
-        self.gen_button = Button(
+        gen_button = Button(
             self.main,
             text="Generate",
             width=STYLES.BUTTON_WIDTH,
             font=FONTS.BUTTON,
             padx=STYLES.PAD_X,
-            command=gen_button_click(self.entries[2]),
+            command=gen_button_click(self.entries.password),
         )
-        self.gen_button.grid(row=3, column=2)
-        for column, button in META_BUTTONS.items():
-            self.meta_buttons.append(
-                Button(self.bottom, text=button, font=FONTS.BUTTON)
-            )
-            self.meta_buttons[column].grid(row=4, column=column)
+        gen_button.grid(row=3, column=2)
+
+        save_button = Button(self.bottom, text="Save", font=FONTS.BUTTON)
+        save_button.grid(row=4, column=0)
+        save_button.config(command=save_button_click(self.entries))
+
+        load_button = Button(self.bottom, text="Load", font=FONTS.BUTTON)
+        load_button.grid(row=4, column=1)
+        load_button.config(command=self.create_load_window)
+
+        quit_button = Button(self.bottom, text="Quit", font=FONTS.BUTTON)
+        quit_button.grid(row=4, column=2)
+        quit_button.config(command=self.root.quit)
 
     def create_load_window(self):
         """Creates the Tkinter Toplevel pop-up window and populates it with named buttons to allow the user to
@@ -103,12 +113,6 @@ class Gui:
             button.config(command=make_handle_click_load(password_record, self.entries))
             button.pack()
 
-    def add_meta_functions(self):
-        """Creates save, load and quit functions for the meta buttons."""
-        self.meta_buttons[0].config(command=save_button_click(self.entries))
-        self.meta_buttons[1].config(command=self.create_load_window)
-        self.meta_buttons[2].config(command=self.root.destroy)
-
     def run_main_loop(self):
         """Runs the GUI."""
         self.create_root()
@@ -116,5 +120,4 @@ class Gui:
         self.create_labels()
         self.create_entries()
         self.add_buttons()
-        self.add_meta_functions()
         self.root.mainloop()
