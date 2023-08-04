@@ -22,6 +22,3 @@ class STYLES:
     PAD_X = 5
     ENTRY_WIDTH = 34
     COMBOBOX_WIDTH = 31
-
-
-META_BUTTONS = {0: "Save", 1: "Load", 2: "Quit"}

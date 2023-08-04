@@ -35,27 +35,22 @@ def save_button_click(entries: Entries):
         user with a messagebox to confirm the information they are saving. Then, if yes, updates an existing
         saved_passwords.json else creates and writes to a new saved_passwords.json. Then, empties the entries.
         """
-
         website = entries.website.get()
-
-        output_dict = {
-            website: {
-                "Email": entries.email.get(),
-                "Password": entries.password.get(),
-            }
-        }
+        email = entries.email.get()
+        password = entries.password.get()
 
         submit = messagebox.askokcancel(
             title="Confirmation",
             message=f"You entered:\n\nWebsite: {website}"
-            f"\nEmail: {output_dict[website]['Email']}"
-            f"\nPassword: {output_dict[website]['Password']}",
+            f"\nEmail: {email}"
+            f"\nPassword: {password}",
         )
 
         if not submit:
             return
 
-        upsert_password(PasswordRecord.from_json(website, output_dict[website]))
+        print(f"Saving {website} {email} {password}")
+        upsert_password(PasswordRecord(website, email, password))
 
         entries.website.delete(0, "end")
         entries.email.delete(0, "end")
