@@ -12,12 +12,11 @@ class PasswordRecord:
     password: str
 
     def to_json(self) -> str:
-        return {[self.website]: {"Email": self.email, "Password": self.password}}
+        return {"Website": self.website, "Email": self.email, "Password": self.password}
 
-    def from_json(self, key: str, value: dict) -> "PasswordRecord":
-        self.website = key
-        self.email = value["Email"]
-        self.password = value["Password"]
+    @staticmethod
+    def from_json(key: str, value: dict) -> "PasswordRecord":
+        return PasswordRecord(key, value["Email"], value["Password"])
 
 
 def init():
@@ -38,23 +37,19 @@ def get_password_by_website(website_name: str):
     return passwords[website_name]
 
 
-def add_password(passwordRecord: PasswordRecord):
-    return _upsert_password(passwordRecord)
+def upsert_password(password_record: PasswordRecord):
+    existing_passwords = _load_passwords_to_dict()
+    existing_passwords[password_record.website] = password_record.to_json()
 
-
-def update_password(passwordRecord: PasswordRecord):
-    return _upsert_password(passwordRecord)
-
-
-def _upsert_password(passwordRecord: PasswordRecord):
-    passwords = _load_passwords_to_dict()
-    with open(PASSWORD_FILE) as json_file:
-        existing_passwords = json.load(json_file)
-        existing_passwords[passwordRecord.website] = passwordRecord.to_json()
-        json.dump(passwords, json_file, indent=4)
+    with open(PASSWORD_FILE, "w") as json_file:
+        print("Writing to file: ", existing_passwords)
+        json.dump(existing_passwords, json_file, indent=4)
 
 
 def _load_passwords_to_dict() -> dict[str, dict]:
-    with open(PASSWORD_FILE) as json_file:
-        passwords_dict = json.load(json_file)
+    with open(PASSWORD_FILE, "r") as json_file:
+        try:
+            passwords_dict = json.load(json_file)
+        except json.decoder.JSONDecodeError:
+            passwords_dict = {}
     return passwords_dict
