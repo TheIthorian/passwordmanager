@@ -50,15 +50,3 @@ def select_random_elements(
         choice(list_of_elements)
         for _ in range(randint(min_elements, max_elements or min_elements))
     ]
-
-
-def gen_button_click(entry):
-    """Function to return inner function for purpose of assigning inner function to button command."""
-
-    def apply_password_to_entry():
-        entry.delete(0, "end")
-        password = generate_password()
-        pyperclip.copy(password)
-        entry.insert(0, password)
-
-    return apply_password_to_entry
