@@ -50,19 +50,18 @@ class Gui:
     def create_entries(self):
         """Creates all Tkinter Entry and Combobox objects. Adjusts column span for bottom entry to make room for
         generator button."""
-        self.entries = {
-            0: Entry(self.main, bd=STYLES.BORDER, width=STYLES.ENTRY_WIDTH),
-            1: Combobox(self.main, width=STYLES.COMBOBOX_WIDTH),
-            2: Entry(self.main, bd=STYLES.BORDER),
-        }
-        for row, value in self.entries.items():
-            if row == 2:
-                value.grid(row=row + 1, column=1, sticky=W)
-            else:
-                value.grid(row=row + 1, column=1, columnspan=2, sticky=W)
-            if type(value) == Combobox:
-                value["values"] = DEFAULT_EMAIL_LIST
-                value.insert(0, DEFAULT_EMAIL_LIST[0])
+        website = Entry(self.main, bd=STYLES.BORDER, width=STYLES.ENTRY_WIDTH)
+        website.grid(row=1, column=1, columnspan=2, sticky=W)
+
+        email = Combobox(self.main, width=STYLES.COMBOBOX_WIDTH)
+        email["values"] = DEFAULT_EMAIL_LIST
+        email.insert(0, DEFAULT_EMAIL_LIST[0])
+        email.grid(row=2, column=1, columnspan=2, sticky=W)
+
+        password = Entry(self.main, bd=STYLES.BORDER)
+        password.grid(row=3, column=1, sticky=W)
+
+        self.entries = {0: website, 1: email, 2: password}
 
     def add_buttons(self):
         """Creates all Tkinter Button objects. Meta buttons populate the bottom frame.
