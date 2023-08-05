@@ -73,18 +73,26 @@ class Gui:
         load_button_dict dict. Each button has a value pair consisting of the website, email and password information
         from saved_passwords.json as a list. Then, calls load_button_click in a for loop on that dictionary to
         target each button and load in the corresponding information from the key : value pairs."""
-        self.load_window = Toplevel(self.main)
-        self.load_window.title("Saved Accounts")
-        self.load_window.config(padx=100, pady=30)
-        with open("saved_passwords.json") as json_file:
-            self.saved_accounts = json.load(json_file)
-            for account, details in self.saved_accounts.items():
-                input_list = [account, details["Email"], details["Password"]]
-                self.load_button_dict.update({Button(self.load_window, text=account,
-                                                     width=def_gui["b_width"], pady=def_gui["pady"]): input_list})
-            for button, details in self.load_button_dict.items():
-                button.config(command=load_button_click(details, self.entries))
-                button.pack()
+        if os.path.isfile("saved_passwords.json"):
+            try:
+                with open("saved_passwords.json") as json_file:
+                    self.saved_accounts = json.load(json_file)
+                    self.load_window = Toplevel(self.main)
+                    self.load_window.title("Saved Accounts")
+                    self.load_window.config(padx=100, pady=30)
+                    for account, details in self.saved_accounts.items():
+                        input_list = [account, details["Email"], details["Password"]]
+                        self.load_button_dict.update({Button(self.load_window, text=account,
+                                                             width=def_gui["b_width"],
+                                                             pady=def_gui["pady"]): input_list})
+                    for button, details in self.load_button_dict.items():
+                        button.config(command=load_button_click(details, self.entries))
+                        button.pack()
+                self.load_button_dict = {}
+            except:
+                messagebox.showinfo(title="Error", message="File 'saved_passwords.json' is corrupted.")
+        else:
+            messagebox.showinfo(title="Info", message="No saved details to load.")
 
     def add_meta_functions(self):
         """Creates save, load and quit functions for the meta buttons."""
